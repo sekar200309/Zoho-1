@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Tracker with TradingView</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-top: 20px;
+      color: #4CAF50;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: url('https://example.com/hero-bg.jpg') no-repeat center center/cover;
+      padding: 100px 20px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 3em;
+      font-weight: bold;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Container for stock data */
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .input-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1.2em;
+      width: 50%;
+      max-width: 300px;
+      margin: 10px;
+      border: 2px solid #4CAF50;
+      border-radius: 5px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #2E8B57;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1.2em;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2E8B57;
+    }
+
+    /* Stock Info Card */
+    #stock-info {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    #stock-info.visible {
+      opacity: 1;
+    }
+
+    #stock-info h2 {
+      font-size: 2em;
+      color: #333;
+    }
+
+    #stock-info p {
+      font-size: 1.5em;
+      color: #333;
+    }
+
+    /* TradingView Chart Container */
+    #tv_chart_container {
+      width: 100%;
+      height: 500px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    #tv_chart_container:hover {
+      transform: scale(1.05);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .input-container input[type="text"] {
+        width: 80%;
+      }
+
+      button {
+        width: 80%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .hero h1 {
+        font-size: 2.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Real-Time Stock Tracker</h1>
+    <p>Track and Analyze Stocks in Real-Time with Interactive Charts</p>
+  </section>
+
+  <div class="container">
+    <!-- Search Bar -->
+    <div class="input-container">
+      <input type="text" id="symbol" placeholder="Enter stock symbols (e.g., AAPL, TSLA)">
+      <button onclick="fetchStockData()">Fetch Data</button>
+    </div>
+
+    <!-- Stock Info -->
+    <div id="stock-info" class="visible">
+      <h2 id="stock-name"></h2>
+      <p id="stock-price"></p>
+    </div>
+
+    <!-- TradingView Chart -->
+    <div id="tv_chart_container"></div>
+  </div>
+
+  <script>
+    // Function to initialize TradingView chart
+    function initializeTradingView(symbol) {
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": symbol,
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "details": true,
+        "toolbar_bg": "#f1f3f6",
+        "hide_top_toolbar": true,
+        "hide_side_toolbar": false,
+        "allow_symbol_change": true,
+        "container_id": "tv_chart_container"
+      });
+    }
+
+    // Fetch stock data using Polygon API
+    async function fetchStockData() {
+      const symbol = document.getElementById('symbol').value.toUpperCase();
+      if (!symbol) return;
+
+      const API_KEY = 'LZEAgGHrG4uxnzMg9XromdP7v_Xa5R0x';  // Replace with your Polygon API key
+      const url = `https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?apiKey=${API_KEY}`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data && data.results) {
+        const stockData = data.results[0];
+        displayStockData(stockData);
+      } 
+    //   else {
+    //     alert('Invalid symbol or no data available.');
+    //   }
+
+      // Initialize TradingView chart
+      initializeTradingView(symbol);
+    }
+
+    function displayStockData(stockData) {
+      const stockInfo = document.getElementById('stock-info');
+      const stockName = document.getElementById('stock-name');
+      const stockPrice = document.getElementById('stock-price');
+
+      const latestPrice = stockData.c;  // Closing price from Polygon API
+      const stockSymbol = stockData.T;
+
+      stockName.textContent = `${stockSymbol} - Stock Info`;
+      stockPrice.textContent = `Price: $${latestPrice}`;
+
+      // Add animation on visibility
+      stockInfo.classList.add('visible');
+    }
+  </script>
+
+  <!-- TradingView Chart Widget Script -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+
+</body>
+</html>
