@@ -7,22 +7,19 @@
   <style>
     /* General Styles */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Roboto', sans-serif;
       background: black;
-      color: #333;
+      color: #fff;
       margin: 0;
       padding: 0;
     }
-    h1 {
-      text-align: center;
-      font-size: 2.5em;
-      margin-top: 20px;
-      color: #4CAF50;
+    h1, h2, p {
+      margin: 0;
     }
 
     /* Hero Section */
     .hero {
-      background: url('https://example.com/hero-bg.jpg') no-repeat center center/cover;
+      /* background: linear-gradient(135deg, #0d47a1, #42a5f5); */
       padding: 100px 20px;
       text-align: center;
       color: #fff;
@@ -30,83 +27,96 @@
     }
 
     .hero h1 {
-      font-size: 3em;
+      font-size: 2.5em;
       font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
     }
 
     .hero p {
-      font-size: 1.2em;
+      font-size: 1.3em;
       margin-top: 10px;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      font-weight: 300;
     }
 
     /* Container for stock data */
     .container {
-      max-width: 1800px;
+      max-width: 1700px;
       margin: 30px auto;
       padding: 0 20px;
     }
 
     .input-container {
       text-align: center;
-      margin: 20px 0;
+      margin: 30px 0;
     }
 
     input[type="text"] {
-      padding: 10px;
-      font-size: 1.2em;
-      width: 50%;
-      max-width: 300px;
+      background: transparent; */
+      color: #fff;
+      padding: 15px;
+      font-size: 1em;
+      width: 60%;
+      max-width: 400px;
       margin: 10px;
-      border: 2px solid #4CAF50;
-      border-radius: 5px;
+      border: 2px solid rgb(19, 55, 115);
+      border-radius: 8px;
       outline: none;
+      box-shadow: 0 5px 15px rgba(28, 155, 239, 0.2);
       transition: all 0.3s ease;
     }
 
     input[type="text"]:focus {
-      border-color: #2E8B57;
+      border-color: rgb(19, 55, 115);
+      box-shadow: 0 5px 15px rgb(19, 55, 115);
     }
 
     button {
-      background-color: #4CAF50;
-      color: white;
+      /* background: linear-gradient(135deg, #ef1ca9, #a600ff); */
+      background: radial-gradient(780px at 37.8% 100.3%, rgb(19, 55, 115) 2.2%, rgb(32, 7, 80) 20.2%, rgb(27, 88, 111) 58.6%, rgb(115, 88, 44) 75%, rgb(99, 19, 90) 89.6%, rgb(12, 51, 76) 96.1%);
+      color: #fff;
       font-size: 1.2em;
-      padding: 10px 20px;
+      font-weight: bold;
+      padding: 15px 25px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      box-shadow: 0 5px 15px rgb(19, 55, 115);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     button:hover {
-      background-color: #2E8B57;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(19, 54, 115, 0.725);
     }
 
     /* Stock Info Card */
     #stock-info {
       display: none;
-      background: #fff;
+      background: #2c2c2c;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
       margin-top: 30px;
-      transition: opacity 0.3s ease;
       opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateY(20px);
     }
 
     #stock-info.visible {
       opacity: 1;
+      transform: translateY(0);
     }
 
     #stock-info h2 {
-      font-size: 2em;
-      color: #333;
+      font-size: 1.8em;
+      color: #1c9bef;
+      margin-bottom: 10px;
     }
 
     #stock-info p {
       font-size: 1.5em;
-      color: #333;
     }
 
     /* TradingView Chart Container */
@@ -114,16 +124,16 @@
       width: 100%;
       height: 500px;
       margin-top: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
       overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       transition: transform 0.3s ease;
     }
 
-/*     #tv_chart_container:hover {
-      transform: scale(1.05);
+    #tv_chart_container:hover {
+      transform: scale(1.02);
     }
- */
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .input-container input[type="text"] {
@@ -141,7 +151,7 @@
       }
 
       .hero h1 {
-        font-size: 2.5em;
+        font-size: 2.2em;
       }
     }
   </style>
@@ -151,7 +161,6 @@
   <!-- Hero Section -->
   <section class="hero">
     <h1>Real-Time Stock Tracker</h1>
-    <p>Track and Analyze Stocks in Real-Time with Interactive Charts</p>
   </section>
 
   <div class="container">
@@ -162,7 +171,7 @@
     </div>
 
     <!-- Stock Info -->
-    <div id="stock-info" class="visible">
+    <div id="stock-info">
       <h2 id="stock-name"></h2>
       <p id="stock-price"></p>
     </div>
@@ -172,30 +181,24 @@
   </div>
 
   <script>
-    // Function to initialize TradingView chart
     function initializeTradingView(symbol) {
       new TradingView.widget({
         "autosize": true,
         "symbol": symbol,
         "interval": "D",
+        "details":true,
         "timezone": "Etc/UTC",
         "theme": "dark",
         "style": "3",
-        "details": true,
-        "toolbar_bg": "#f1f3f6",
-        "hide_top_toolbar": true,
-        "hide_side_toolbar": false,
-        "allow_symbol_change": true,
         "container_id": "tv_chart_container"
       });
     }
 
-    // Fetch stock data using Polygon API
     async function fetchStockData() {
       const symbol = document.getElementById('symbol').value.toUpperCase();
       if (!symbol) return;
 
-      const API_KEY = 'LZEAgGHrG4uxnzMg9XromdP7v_Xa5R0x';  // Replace with your Polygon API key
+      const API_KEY = 'LZEAgGHrG4uxnzMg9XromdP7v_Xa5R0x'; 
       const url = `https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?apiKey=${API_KEY}`;
       
       const response = await fetch(url);
@@ -205,11 +208,7 @@
         const stockData = data.results[0];
         displayStockData(stockData);
       } 
-    //   else {
-    //     alert('Invalid symbol or no data available.');
-    //   }
 
-      // Initialize TradingView chart
       initializeTradingView(symbol);
     }
 
@@ -218,19 +217,17 @@
       const stockName = document.getElementById('stock-name');
       const stockPrice = document.getElementById('stock-price');
 
-      const latestPrice = stockData.c;  // Closing price from Polygon API
+      const latestPrice = stockData.c;
       const stockSymbol = stockData.T;
 
       stockName.textContent = `${stockSymbol} - Stock Info`;
       stockPrice.textContent = `Price: $${latestPrice}`;
 
-      // Add animation on visibility
       stockInfo.classList.add('visible');
     }
   </script>
 
-  <!-- TradingView Chart Widget Script -->
-  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script src="https://s3.tradingview.com/tv.js"></script>
 
 </body>
 </html>
